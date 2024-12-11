@@ -2,9 +2,9 @@
 
 ## 📚 Materia
 **Dezvoltarea Aplicatiilor Web**  
-Facultatea de Matematica si Informatica
-Specializarea Informatica
-Anul: 2
+Facultatea de Matematica si Informatica, 
+Specializarea Informatica, 
+Anul: 2, 
 Grupa: 2
 
 ---
