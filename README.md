@@ -25,6 +25,6 @@ Acest proiect simulează o platformă web pentru gestionarea unei săli de conce
 
 ## 🛠️ Tehnologii utilizate
 - **Backend**: PHP
-- **Frontend**: HTML, CSS, JavaScript
+- **Frontend**: HTML, CSS, JavaScript, Bootstrap
 - **Bază de date**: MySQL
 - **Altele**: SVG pentru imagini vectoriale, GitHub pentru managementul codului, FPDF pentru generarea fisierelor PDF
