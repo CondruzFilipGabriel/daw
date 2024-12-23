@@ -1,0 +1,20 @@
+{
+    "name": "condruz-filip-gabriel/daw",
+    "description": "Proiect Dezvoltarea Aplicatiilor Web - Sala Regala de Muzica",
+    "type": "project",
+    "require": {
+        "setasign/fpdf": "^1.8"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "CondruzFilipGabriel\\Daw\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Condruz Filip - Gabriel",
+            "email": "condruz.filip@gmail.com"
+        }
+    ]
+}

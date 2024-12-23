@@ -1,0 +1,84 @@
+.event-container {
+    height: 80%;
+    width: calc(100% - 10em);
+    margin: 0 5em 0 5em;
+    border-top: 2px solid var(--shadowcolor);
+    border-bottom: 2px solid var(--shadowcolor);
+    display: inline-block;
+    text-align: center;
+}
+
+.event-article {
+    display: inline-block;
+    height: 11em;
+    width: 12em;
+    margin: 0.5em;
+    border: 2px solid var(--maincolor);
+    border-radius: 10%;
+    text-align: center;
+}
+
+.event-image {
+    height: 60%;
+    width: 98%;
+    border-radius: 10% 10% 0 0;
+    margin-top: 1%;
+}
+
+.event-article-content {
+    height: 55%;
+    text-align: center;
+    margin: 0;
+    padding: o;
+}
+
+.event-article-content * {
+    margin: 0;
+    padding: o;
+}
+
+.event-article-content h4 {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.event-date {
+    font-size: 0.6em;
+}
+
+.event-price {
+    font-size: 0.4em;
+    font-style: italic;
+}
+
+.event-buton-rezervare {
+    font-size: 0.8em;
+    color: var(--button-text);
+    border-color: 2px solid var(--maincolor);
+    border-radius: 20%;
+    box-shadow: 1px 1px var(--shadowcolor);
+    margin: auto;
+    padding: 0 1em;
+}
+
+.event-buton-rezervare:hover {
+    box-shadow: 2px 2px var(--shadowcolor);
+    font-size: 0.9em;
+}
+
+.event-buton-rezervare:active {
+    box-shadow: 1px 1px inset var(--shadowcolor);
+}
+
+.anunt {
+    color: var(--button-text) !important;
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    padding-top: 1em;
+    text-shadow: 0 0 5px #fff, 0 0 10px var(--maincolor), 0 0 15px var(--maincolor);
+}
+
+.anunt a {
+    color: var(--shadowcolor);
+}

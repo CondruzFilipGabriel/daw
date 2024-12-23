@@ -1,0 +1,9 @@
+#disclaimer {
+    font-size: 1em;
+    font-weight: bold;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    text-shadow: 0 0 5px #fff, 0 0 10px var(--shadowcolor), 0 0 15px var(--shadowcolor);
+}

@@ -1,0 +1,72 @@
+html {
+    margin: 0;
+    background-image: url('../img/background.webp');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.85);
+    background-blend-mode: overlay;
+
+    --maincolor: #f9cf64;
+    --shadowcolor: #b4a65c;
+    --button-text: #e1ac00;
+}
+
+body {
+    background-color: transparent !important;
+}
+a {
+    text-decoration: none;
+}
+
+#logo {
+    width: 110px;
+    height: 110px;
+    grid-area: logo;
+    margin-top: 25px;
+    margin-bottom: 5px;
+}
+
+#titlu {
+    grid-area: titlu;
+    text-align: left;
+    color: var(--maincolor);
+    text-shadow: 
+        0 0 5px var(--shadowcolor),
+        2px 2px 5px rgba(0, 0, 0, 0.4);
+    font-size: 2em;
+}
+
+.navbar {
+    display: grid;
+    grid-template-areas: 
+        "logo titlu  "
+        "logo butoane"
+    ;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: auto auto;
+    margin: 0 6em 0 6em;
+}
+
+#menu-button {
+    grid-area: butoane;
+    text-align: right;
+}
+
+#user-button {
+    border-radius: 50%;
+    border: 2px solid var(--maincolor);
+    text-align: right;
+    font-size: 1.3em;
+    margin: auto;
+    padding: 10px 5px 0px 5px;
+    box-shadow: 1px 1px var(--shadowcolor);
+}
+
+#user-button:hover {
+    box-shadow: 3px 3px var(--shadowcolor);
+    font-size: 1.5em;
+}
+
+#user-button:active {
+    box-shadow: 2px 2px inset var(--shadowcolor);
+}
