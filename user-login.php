@@ -8,4 +8,3 @@
     <h1>User Login</h1>
 
 <?php include 'modules/footer.php'; ?>
-
