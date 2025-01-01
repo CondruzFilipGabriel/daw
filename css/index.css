@@ -79,6 +79,11 @@
     text-shadow: 0 0 5px #fff, 0 0 10px var(--maincolor), 0 0 15px var(--maincolor);
 }
 
-.anunt a {
+a {
     color: var(--shadowcolor);
+}
+
+.login-form {
+    width: 100%;
+    text-align: center;
 }

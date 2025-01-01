@@ -4,14 +4,13 @@
     include_once 'modules/mail.php';
     $mail = new Mail();
 
-    require_once 'modules/captcha.php';
-    $captcha = new Captcha();
-
     if (!$user) {
-        include_once 'modules/login.php';
+        // reset password
     } else {
-        include_once 'modules/update-account.php';
+        // new password
     }
 
     include_once 'modules/footer.php';     
 ?>
+
+<h4> New password </h4>
