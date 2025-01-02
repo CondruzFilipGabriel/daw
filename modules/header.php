@@ -20,6 +20,18 @@
     function sanitize_input($input) {
         return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
     }
+
+    function validate_name($name) {
+        return preg_match('/^[a-zA-Z\s]{1,50}$/', $name);
+    }
+
+    function validate_email($email) {
+        return preg_match('/^[^\s@]+@[^\s@]+\.[^\s@]+$/', $email);
+    }
+
+    function validate_password($password) {
+        return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/', $password);
+    }
 ?>
 
 <!DOCTYPE html>

@@ -6,7 +6,7 @@ return [
         name VARCHAR(100) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
-        rights ENUM('user', 'admin', 'moderator') DEFAULT 'user' NOT NULL,
+        rights ENUM('user', 'moderator', 'admin') DEFAULT 'user' NOT NULL,
         tsv_code VARCHAR(10),
         tsv_code_expiration DATETIME
     )",
@@ -101,7 +101,7 @@ return [
 
     // Insert Admin User
     "INSERT INTO users (name, email, password, rights) VALUES
-        ('admin', 'admin@example.com', '" . password_hash('dbpass', PASSWORD_DEFAULT) . "', 'admin')",
+        ('admin', 'filip-student@yahoo.com', '" . password_hash('dbpass', PASSWORD_DEFAULT) . "', 'admin')",
 
     // Insert Events with Default Category Images
     "INSERT INTO events (name, date, start_hour, price, category_id, image) VALUES

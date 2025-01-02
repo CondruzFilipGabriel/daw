@@ -5,3 +5,7 @@
 </footer>
 
 </html>
+
+<?php
+    unset($_SESSION['alert']);
+?>

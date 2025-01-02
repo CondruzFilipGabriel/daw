@@ -18,10 +18,14 @@
             $ipAddress = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
             $geolocation = 'Unknown'; // Replace with actual geolocation if available
 
-            $this->db->createSession($userId, $token, $ipAddress, $geolocation);
-            $_SESSION['user_token'] = $token;
-
-            return $token;
+            if ($userId) {
+                $this->db->createSession($userId, $token, $ipAddress, $geolocation);
+                $_SESSION['user_token'] = $token;
+    
+                return $token;
+            } else {
+                Debug::log("User creation failed");
+            }
         }
 
                 // Login the user and create a session

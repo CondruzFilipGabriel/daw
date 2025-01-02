@@ -1,5 +1,4 @@
-<?php
-    
+<?php    
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         include_once __DIR__ . '/header.php';
         // Debug::log('loaded the login.php file');
@@ -61,11 +60,11 @@
     
     </form>    
 
-    <h5><a href="new-pass.php">
+    <h5><a href="/ProiectDaw/new-pass.php">
         Am uitat parola...
     </a></h5>
     
-    <h4><a href="cont-nou.php">
+    <h4><a href="/ProiectDaw/cont-nou.php">
         Creaza un cont nou
     </a></h4>
 </div>

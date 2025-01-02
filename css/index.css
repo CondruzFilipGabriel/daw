@@ -86,4 +86,37 @@ a {
 .login-form {
     width: 100%;
     text-align: center;
+    margin: auto;
+}
+
+table, tbody, tr {
+    width: 100%;
+    margin: auto;
+}
+
+tr td:first-child {
+    text-align: right;
+    padding-right: 3em;
+}
+
+tr td:last-child {
+    text-align: left;
+}
+
+.red-text {
+    color: red;
+}
+
+.blue-text {
+    color: blue;
+}
+
+.users-management {
+    border: 1px solid black;
+    width: fit-content;
+    text-align: center;
+}
+
+.users-management td {
+    min-width: 50px;
 }
