@@ -30,4 +30,4 @@ Acest proiect simulează o platformă web pentru gestionarea unei săli de conce
 =======
 - **Frontend**: HTML, CSS, JavaScript, Bootstrap
 - **Bază de date**: MySQL
-- **Altele**: SVG pentru imagini vectoriale, GitHub pentru managementul codului, FPDF pentru generarea fisierelor PDF
+- **Altele**: GitHub pentru managementul codului, FPDF pentru generarea fisierelor PDF
