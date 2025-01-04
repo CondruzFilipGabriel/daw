@@ -30,16 +30,6 @@
             // Initialize PHPMailer
             $this->mail = new PHPMailer(true);
             $this->configureMailer();
-
-            // Send a test email
-            // $this->send(
-            //     $this->mailAddress, 
-            //     'Test Email', 
-            //     '
-            //         <p>This is a test email from Sala Regala de Muzica.</p>
-            //         <a href="https://www.google.com">Google Home Page</a>
-            //     '
-            // );
         }
 
         private function configureMailer() {
@@ -60,21 +50,39 @@
             }
         }
 
-        public function send($to, $subject, $body) {
+        public function send($to, $subject, $body, $attachments = [], $inMemoryAttachments = []) {
             try {
                 $this->mail->clearAddresses();
                 $this->mail->addAddress($to);
-
+        
                 $this->mail->isHTML(true);
                 $this->mail->Subject = $subject;
                 $this->mail->Body = $body;
-
+        
+                // Add file attachments
+                if (!empty($attachments)) {
+                    foreach ($attachments as $attachment) {
+                        if (file_exists($attachment)) {
+                            $this->mail->addAttachment($attachment);
+                        } else {
+                            Debug::log("Attachment not found: $attachment");
+                        }
+                    }
+                }
+        
+                // Add in-memory attachments
+                if (!empty($inMemoryAttachments)) {
+                    foreach ($inMemoryAttachments as $attachment) {
+                        $this->mail->addStringAttachment($attachment['data'], $attachment['name']);
+                    }
+                }
+        
                 $this->mail->send();
                 return true;
             } catch (Exception $e) {
                 Debug::log('Mail sending failed: ' . $e->getMessage());
                 return false;
             }
-        }
+        }                   
     }
 ?>
