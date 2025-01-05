@@ -120,3 +120,16 @@ tr td:last-child {
 .users-management td {
     min-width: 50px;
 }
+
+.seat_nb {
+    width: 2.4rem;
+    border: none;
+    background-color: rgba(0,0,0,0);
+    color: var(--shadowcolor);
+    padding: 0;
+    margin: 0 4px;
+    font-size: small;
+    font-weight: bolder;
+    text-align: center;
+    outline: none;
+}

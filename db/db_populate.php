@@ -101,7 +101,7 @@ return [
 
     // Insert Admin User
     "INSERT INTO users (name, email, password, rights) VALUES
-        ('admin', 'filip-student@yahoo.com', '" . password_hash('dbpass', PASSWORD_DEFAULT) . "', 'admin')",
+        ('admin', 'filip-student@yahoo.com', '" . password_hash('pass', PASSWORD_DEFAULT) . "', 'admin')",
 
     // Insert Events with Default Category Images
     "INSERT INTO events (name, date, start_hour, price, category_id, image) VALUES
@@ -131,5 +131,7 @@ return [
         (4, 4), -- Beethoven Symphony -> Vienna Philharmonic
         (5, 5), -- Comedy Gala -> John Comedian
         (6, 6), -- Tech Conference -> Tech Guru
-        (7, 7)  -- Product Presentations -> Marketing Specialist"
+        (7, 7)  -- Product Presentations -> Marketing Specialist",
+
+    "INSERT INTO hall (name, capacity) VALUES ('Sala Regala de Muzica', 300)"
 ];

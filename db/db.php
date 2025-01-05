@@ -331,5 +331,68 @@
         
             return $stmt->num_rows > 0; // Returns true if email exists, false otherwise
         }
+
+        public function reserveSeats($eventId, $numberOfSeats, $price, $userId) {
+            // Step 1: Get the hall capacity
+            $hallQuery = "SELECT capacity FROM hall LIMIT 1";
+            $hallResult = $this->db_con->query($hallQuery);
+            if (!$hallResult || $hallResult->num_rows === 0) {
+                Debug::log("Nu s-a putut obtine capacitatea de locuri a salii");
+                return false;
+            }
+            $hallCapacity = (int) $hallResult->fetch_assoc()['capacity'];
+        
+            // Step 2: Get currently reserved seats for the event
+            $reservedSeatsQuery = "SELECT seat_number FROM tickets WHERE event_id = ? ORDER BY seat_number ASC";
+            $stmt = $this->db_con->prepare($reservedSeatsQuery);
+            if (!$stmt) {
+                Debug::log("Nu s-a putut executa comanda pentru obtinerea listei de locuri ocupate: " . $this->db_con->error);
+                return false;
+            }
+            $stmt->bind_param('i', $eventId);
+            $stmt->execute();
+            $reservedSeatsResult = $stmt->get_result();
+        
+            $reservedSeats = [];
+            while ($row = $reservedSeatsResult->fetch_assoc()) {
+                $reservedSeats[] = (int) $row['seat_number'];
+            }
+            $stmt->close();
+        
+            // Step 3: Check if there are enough free seats
+            $freeSeats = [];
+            for ($i = 1; $i <= $hallCapacity; $i++) {
+                if (!in_array($i, $reservedSeats)) {
+                    $freeSeats[] = $i;
+                }
+            }
+        
+            if (count($freeSeats) < $numberOfSeats) {
+                Debug::log("Nu sunt disponibile suficiente locuri pentru evenimentul cu ID: $eventId");
+                return false;
+            }
+        
+            // Step 4: Reserve the required seats
+            $seatsToReserve = array_slice($freeSeats, 0, $numberOfSeats);
+            $ticketQuery = "INSERT INTO tickets (user_id, event_id, seat_number, price) VALUES (?, ?, ?, ?)";
+            $stmt = $this->db_con->prepare($ticketQuery);
+            if (!$stmt) {
+                Debug::log("Nu s-a putut pregati comanda pentru rezervarea loculor: " . $this->db_con->error);
+                return false;
+            }
+        
+            foreach ($seatsToReserve as $seat) {
+                $stmt->bind_param('iiid', $userId, $eventId, $seat, $price);
+                if (!$stmt->execute()) {
+                    Debug::log("Nu s-a putut executa rezervarea locului $seat: " . $stmt->error);
+                    return false;
+                }
+            }
+        
+            $stmt->close();
+        
+            Debug::log("Au fost rezervate $numberOfSeats locuri pentru event-ul cu ID: $eventId");
+            return true;
+        }
     };
 ?>
