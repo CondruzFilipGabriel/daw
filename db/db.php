@@ -338,7 +338,7 @@
             $hallResult = $this->db_con->query($hallQuery);
             if (!$hallResult || $hallResult->num_rows === 0) {
                 Debug::log("Nu s-a putut obtine capacitatea de locuri a salii");
-                return false;
+                return null;
             }
             $hallCapacity = (int) $hallResult->fetch_assoc()['capacity'];
         
@@ -347,7 +347,7 @@
             $stmt = $this->db_con->prepare($reservedSeatsQuery);
             if (!$stmt) {
                 Debug::log("Nu s-a putut executa comanda pentru obtinerea listei de locuri ocupate: " . $this->db_con->error);
-                return false;
+                return null;
             }
             $stmt->bind_param('i', $eventId);
             $stmt->execute();
@@ -369,7 +369,7 @@
         
             if (count($freeSeats) < $numberOfSeats) {
                 Debug::log("Nu sunt disponibile suficiente locuri pentru evenimentul cu ID: $eventId");
-                return false;
+                return null;
             }
         
             // Step 4: Reserve the required seats
@@ -377,22 +377,22 @@
             $ticketQuery = "INSERT INTO tickets (user_id, event_id, seat_number, price) VALUES (?, ?, ?, ?)";
             $stmt = $this->db_con->prepare($ticketQuery);
             if (!$stmt) {
-                Debug::log("Nu s-a putut pregati comanda pentru rezervarea loculor: " . $this->db_con->error);
-                return false;
+                Debug::log("Nu s-a putut pregati comanda pentru rezervarea locurilor: " . $this->db_con->error);
+                return null;
             }
         
             foreach ($seatsToReserve as $seat) {
                 $stmt->bind_param('iiid', $userId, $eventId, $seat, $price);
                 if (!$stmt->execute()) {
                     Debug::log("Nu s-a putut executa rezervarea locului $seat: " . $stmt->error);
-                    return false;
+                    return null;
                 }
             }
         
             $stmt->close();
         
-            Debug::log("Au fost rezervate $numberOfSeats locuri pentru event-ul cu ID: $eventId");
-            return true;
-        }
+            // Return the reserved seats
+            return $seatsToReserve;
+        }        
     };
 ?>

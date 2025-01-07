@@ -20,6 +20,11 @@
         exit;
     }
 
+    if($numberOfSeats == 0){
+        header("Location: index.php");
+        exit;
+    }
+
     // Reserve seats
     $reservationSuccess = $db->reserveSeats($eventId, (int)$numberOfSeats, (float)$eventPrice, (int)$user['user_id']);
 
@@ -34,23 +39,21 @@
         "tickets" => [
             [
                 "name" => $eventName,
-                "date" => date("d-m-Y", strtotime($eventDate)),
+                "dateTime"=> $eventDate,
                 "price" => (float)$eventPrice,
                 "quantity" => (int)$numberOfSeats,
                 "currency" => "RON"
             ]
-        ],
-        "total" => (float)$eventPrice * (int)$numberOfSeats,
-        "issue_date" => date("d-m-Y") // Current date in DD-MM-YYYY format
+            ],
+        "total" => (float)$eventPrice * (int)$numberOfSeats
     ]);
 
     $beneficiar = $user['name'];
     $emailBeneficiar = $user['email'];
-    $reservedSeats = range(1, $numberOfSeats); // Example: Replace with actual reserved seats from database
 
     // Load the necessary module and send invoice and tickets
     include_once 'modules/trimite.php';
-    Trimite::creazaSiTrimiteFacturaSiBilete($jsonData, $user['user_id'], $beneficiar, $emailBeneficiar, $reservedSeats);
+    Trimite::creazaSiTrimiteFacturaSiBilete($jsonData, $user['user_id'], $beneficiar, $emailBeneficiar, $reservationSuccess);
 
     header("Location: /ProiectDaw/user-login.php");
     exit;

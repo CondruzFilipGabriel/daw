@@ -41,7 +41,7 @@
             $this->pdf->SetFont('Helvetica', 'B', 14);
             $this->pdf->Cell(0, 10, 'FACTURA', 0, 1, 'C');
             $this->pdf->SetFont('Helvetica', '', 12);
-            $this->pdf->Cell(0, 10, 'Data: ' . date('Y-m-d H:i:s'), 0, 1, 'C');
+            $this->pdf->Cell(0, 10, 'Data: ' . date('d-m-Y'), 0, 1, 'C');
             $this->pdf->Ln(5);
 
             // Add Table Header

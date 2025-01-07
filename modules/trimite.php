@@ -21,12 +21,13 @@
 
             foreach ($data['tickets'] as $ticket) {
                 $showName = $ticket['name'];
+                $showDate = $ticket['dateTime'];
                 $quantity = $ticket['quantity'];
 
                 for ($i = 0; $i < $quantity; $i++) {
                     if (isset($reservedSeats[$seatIndex])) {
                         $seat = $reservedSeats[$seatIndex];
-                        $pdfString = $bilet->genereazaBilet($userId, $showName, $seat);
+                        $pdfString = $bilet->genereazaBilet($showName, $showDate, $seat);
                         $tickets[] = [
                             'data' => $pdfString,
                             'name' => "bilet_$seat.pdf"

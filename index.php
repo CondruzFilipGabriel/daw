@@ -43,4 +43,6 @@
     <b>Acest site este un proiect școlar și nu reprezintă o entitate reală</b>
 </h5>
 
+<script src="js/index.js"></script>
+
 <?php include 'modules/footer.php'; ?>
