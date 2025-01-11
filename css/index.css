@@ -115,10 +115,18 @@ tr td:last-child {
     border: 1px solid black;
     width: fit-content;
     text-align: center;
+    padding: 0 2px;
 }
 
 .users-management td {
-    min-width: 50px;
+    width: 50px;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.users-management td input {
+    width: fit-content;
 }
 
 .seat_nb {
@@ -132,4 +140,19 @@ tr td:last-child {
     font-weight: bolder;
     text-align: center;
     outline: none;
+}
+
+.coloana-pret {
+    max-width: 80px; /* Adjust to your preference */
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+input {
+    outline: none;
+}
+
+.left {
+    width: 100%;
+    text-align: left !important;
 }

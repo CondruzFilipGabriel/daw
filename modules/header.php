@@ -13,7 +13,9 @@
         // Debug::log("header.php: Generated CSRF Token: " . $_SESSION['csrf_token']);
     }
     
-    
+    // Debug::log($_SESSION);
+    // Debug::log($_SERVER);
+
     $alert = isset($_SESSION['alert']) ? $_SESSION['alert'] : null;
     unset($_SESSION['alert']); // Clear it after reading
     

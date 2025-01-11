@@ -61,24 +61,25 @@ return [
     "CREATE TABLE IF NOT EXISTS sessions (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT,
-        ip_address VARCHAR(45) NOT NULL,
         token VARCHAR(255) NOT NULL UNIQUE,
         expires_at DATETIME NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        geolocation VARCHAR(255),
         FOREIGN KEY (user_id) REFERENCES users(id)
     )",
 
-    // Create the Analytics Table
-    "CREATE TABLE IF NOT EXISTS analytics (
+// Create the Analytics Table
+"CREATE TABLE IF NOT EXISTS analytics (
         id INT AUTO_INCREMENT PRIMARY KEY,
         session_id INT NOT NULL,
         page VARCHAR(255) NOT NULL,
         page_load_count INT DEFAULT 0,
         browser VARCHAR(100) NOT NULL,
         operating_system VARCHAR(100) NOT NULL,
+        browser VARCHAR(100) NOT NULL,
         device_type ENUM('desktop', 'mobile') NOT NULL,
         date DATE NOT NULL,
+        ip_address VARCHAR(45) NOT NULL,
+        geolocation VARCHAR(255),        
         FOREIGN KEY (session_id) REFERENCES sessions(id)
     )",
 

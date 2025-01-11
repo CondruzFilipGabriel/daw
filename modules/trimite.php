@@ -65,12 +65,12 @@
             }
         }
 
-        public function trimiteBilete($beneficiar, $emailBeneficiar, $reservedSeats) {
+        public function trimiteBilete($beneficiar, $emailBeneficiar, $eventName, $eventDate, $reservedSeats) {
             // Generate the tickets
             $bilet = new Bilet();
             $tickets = [];
             foreach ($reservedSeats as $seat) {
-                $pdfString = $bilet->genereazaBilet(1, 'Concertul Anului', $seat);
+                $pdfString = $bilet->genereazaBilet($eventName, $eventDate, $seat);
                 $tickets[] = [
                     'data' => $pdfString,
                     'name' => "bilet_$seat.pdf"

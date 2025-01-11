@@ -77,15 +77,27 @@
             self::$instance = null;
         }
 
+        public function getAllCategories() {
+            $query = "SELECT id, name, image FROM categories ORDER BY name ASC";
+            $result = $this->db_con->query($query);
+
+            if (!$result) {
+                Debug::log("Failed to fetch categories: " . $this->db_con->error);
+                return [];
+            }
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
                // Fetch a list of all events
         public function getAllEvents() {
             $query = "
                 SELECT 
-                    e.id,
+                    e.id AS id,
                     e.name AS title,
                     IFNULL(e.image, c.image) AS image, -- Use category image if event image is null
                     e.price,
-                    CONCAT(e.date, ' ', e.start_hour) AS date_time
+                    CONCAT(e.date, ' ', e.start_hour) AS date_time,
+                    e.category_id AS category_id
                 FROM 
                     events e
                 INNER JOIN 
@@ -102,16 +114,98 @@
             return $result->fetch_all(MYSQLI_ASSOC);
         }
 
+        public function createEvent($name, $date, $start_hour, $price, $category_id, $image = null) {
+            // Validate category_id
+            $categoryQuery = "SELECT id FROM categories WHERE id = ?";
+            $stmt = $this->db_con->prepare($categoryQuery);
+            if (!$stmt) {
+                Debug::log("Failed to prepare category validation: " . $this->db_con->error);
+                return false;
+            }
+            $stmt->bind_param('i', $category_id);
+            $stmt->execute();
+            $stmt->store_result();
+        
+            if ($stmt->num_rows === 0) {
+                Debug::log("Invalid category_id: " . $category_id);
+                return false;
+            }
+            $stmt->close();
+        
+            // Insert the event
+            $query = "INSERT INTO events (name, date, start_hour, price, category_id, image) VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $this->db_con->prepare($query);
+            if (!$stmt) {
+                Debug::log("Failed to prepare event creation: " . $this->db_con->error);
+                return false;
+            }
+            $stmt->bind_param('sssdis', $name, $date, $start_hour, $price, $category_id, $image);
+            $result = $stmt->execute();
+        
+            if ($result) {
+                return $stmt->insert_id;  // Return the last inserted ID
+            }
+        
+            $stmt->close();
+            return false;
+        }
+        
+        public function updateEvent($id, $name, $date, $start_hour, $price, $category_id, $image = null) {
+            // Validate category_id
+            $categoryQuery = "SELECT id FROM categories WHERE id = ?";
+            $stmt = $this->db_con->prepare($categoryQuery);
+            if (!$stmt) {
+                Debug::log("Failed to prepare category validation: " . $this->db_con->error);
+                return false;
+            }
+            $stmt->bind_param('i', $category_id);
+            $stmt->execute();
+            $stmt->store_result();
+        
+            if ($stmt->num_rows === 0) {
+                Debug::log("Invalid category_id: " . $category_id);
+                return false;
+            }
+            $stmt->close();
+        
+            // Update the event
+            $query = "UPDATE events SET name = ?, date = ?, start_hour = ?, price = ?, category_id = ?, image = ? WHERE id = ?";
+            $stmt = $this->db_con->prepare($query);
+            if (!$stmt) {
+                Debug::log("Failed to prepare event update: " . $this->db_con->error);
+                return false;
+            }
+            $stmt->bind_param('sssdisi', $name, $date, $start_hour, $price, $category_id, $image, $id);
+            $result = $stmt->execute();
+            $stmt->close();
+        
+            return $result;
+        }
+
+        public function deleteEvent($id) {
+            $query = "DELETE FROM events WHERE id = ?";
+            $stmt = $this->db_con->prepare($query);
+            if (!$stmt) {
+                Debug::log("Failed to prepare event deletion: " . $this->db_con->error);
+                return false;
+            }
+            $stmt->bind_param('i', $id);
+            $result = $stmt->execute();
+            $stmt->close();
+
+            return $result;
+        }
+
         // Create a new session
-        public function createSession($userId, $token, $ipAddress, $geolocation) {
+        public function createSession($userId, $token) {
             if (!is_int($userId) || $userId <= 0) {
                 Debug::log("Invalid user ID: " . $userId);
                 return false;
             }
 
             $expiresAt = date('Y-m-d H:i:s', strtotime('+1 day'));
-            $query = "INSERT INTO sessions (user_id, ip_address, token, expires_at, geolocation) 
-                      VALUES (?, ?, ?, ?, ?)";
+            $query = "INSERT INTO sessions (user_id, token, expires_at) 
+                      VALUES (?, ?, ?)";
             
             $stmt = $this->db_con->prepare($query);
         
@@ -120,7 +214,7 @@
                 return false;
             }
         
-            $stmt->bind_param('issss', $userId, $ipAddress, $token, $expiresAt, $geolocation);
+            $stmt->bind_param('iss', $userId, $token, $expiresAt);
             $result = $stmt->execute();
         
             if (!$result) {
@@ -393,6 +487,57 @@
         
             // Return the reserved seats
             return $seatsToReserve;
+        }        
+
+        public function getUserTickets($userId) {
+            // Prepare the SQL query to join tickets and events tables
+            $query = "
+                SELECT 
+                    e.name AS showName, 
+                    CONCAT(e.date, ' ', e.start_hour) AS showDate, 
+                    t.seat_number AS seatNumber,
+                    t.price AS ticketPrice
+                FROM 
+                    tickets t
+                INNER JOIN 
+                    events e ON t.event_id = e.id
+                WHERE 
+                    t.user_id = ?
+                ORDER BY 
+                    e.date, e.start_hour, t.seat_number
+            ";
+        
+            $stmt = $this->db_con->prepare($query);
+            if (!$stmt) {
+                Debug::log("Failed to prepare statement: " . $this->db_con->error);
+                return [];
+            }
+        
+            // Bind the user ID parameter to the query
+            $stmt->bind_param('i', $userId);
+            $stmt->execute();
+        
+            $result = $stmt->get_result();
+        
+            if (!$result) {
+                Debug::log("Failed to execute query: " . $stmt->error);
+                return [];
+            }
+        
+            // Fetch all tickets as an array of objects
+            $tickets = [];
+            while ($row = $result->fetch_assoc()) {
+                $tickets[] = (object) [
+                    'showName' => $row['showName'],
+                    'showDate' => $row['showDate'],
+                    'seatNumber' => $row['seatNumber'],
+                    'ticketPrice' => $row['ticketPrice']
+                ];
+            }
+        
+            $stmt->close();
+        
+            return $tickets;
         }        
     };
 ?>

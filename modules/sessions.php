@@ -14,17 +14,20 @@
 
         // Create a new session
         public function new_session($userId) {
-            $token = bin2hex(random_bytes(32)); // Generate a secure token
-            $ipAddress = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-            $geolocation = 'Unknown'; // Replace with actual geolocation if available
+            if (is_int($userId) && $userId > 0) {
+                $token = bin2hex(random_bytes(32)); // Generate a secure token
+                $result = $this->db->createSession($userId, $token);
 
-            if ($userId) {
-                $this->db->createSession($userId, $token, $ipAddress, $geolocation);
-                $_SESSION['user_token'] = $token;
-    
-                return $token;
+                if ($result) {
+                    $_SESSION['user_token'] = $token;
+                    return $token;
+                } else {
+                    Debug::log("Session creation failed for user ID: " . $userId);
+                    return false;
+                }
             } else {
                 Debug::log("User creation failed");
+                return false;
             }
         }
 

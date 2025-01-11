@@ -7,7 +7,27 @@
 
 <?php foreach ($events as $event) { ?>
     <form class="event-article" action="rezerva.php" method="POST">
-        <img class="event-image" src="img/events/generic/<?= $event['image'] ?>" alt="Vals">
+        <!-- <img class="event-image" src="img/events/generic/<?= $event['image'] ?>" alt="Vals"> -->
+        <img class="event-image" src="
+            <?php
+                $eventImagePath = 'img/events/';
+                $defaultImagePath = 'img/events/generic/' . $event['image'];
+                $imageFound = false;
+                $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+                foreach ($allowedExtensions as $ext) {
+                    $filePath = $eventImagePath . $event['id'] . '.' . $ext;
+                    if (file_exists($filePath)) {
+                        echo $filePath;
+                        $imageFound = true;
+                        break;
+                    }
+                }
+                if (!$imageFound) {
+                    echo $defaultImagePath;
+                }
+            ?>" alt="<?= htmlspecialchars($event['title']) ?>">
+
         <div class="event-article-content">
             <h4><?= $event['title'] ?></h4>
             <h5 class="event-date"><?= $event['date_time'] ?></h5>

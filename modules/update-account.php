@@ -55,6 +55,63 @@
         <button type="submit" class="event-buton-rezervare blue-text">Logout</button>
     </form>
 
+
+    <h3>Bilete Achizitionate</h3>
+    <table class="users-management">
+        <thead>
+            <tr>
+                <th>Numele evenimentului</th>
+                <th>Data evenimentului</th>
+                <th>Pretul unui bilet</th>
+                <th>Numar de bilete</th>
+                <th>Descarca bilet</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            $tickets = $db->getUserTickets($user['user_id']);
+            $groupedTickets = [];
+
+            // Group tickets by event
+            foreach ($tickets as $ticket) {
+                $eventKey = $ticket->showName . $ticket->showDate;
+                if (!isset($groupedTickets[$eventKey])) {
+                    $groupedTickets[$eventKey] = [
+                        'name' => $ticket->showName,
+                        'date' => $ticket->showDate,
+                        'price' => $ticket->ticketPrice,
+                        'seats' => [],
+                    ];
+                }
+                $groupedTickets[$eventKey]['seats'][] = $ticket->seatNumber;
+            }
+
+            // Render grouped tickets
+            foreach ($groupedTickets as $event) {
+                $seatNumbers = $event['seats'];
+                $numTickets = count($seatNumbers);
+                ?>
+                <tr>
+                    <td><?= htmlspecialchars($event['name']) ?></td>
+                    <td><?= htmlspecialchars($event['date']) ?></td>
+                    <td><?= htmlspecialchars($event['price']) ?> RON</td>
+                    <td><?= $numTickets ?></td>
+                    <td>
+                        <form action="/ProiectDaw/modules/trimite-bilete.php" method="POST">
+                            <input type="hidden" name="event_name" value="<?= htmlspecialchars($event['name']) ?>">
+                            <input type="hidden" name="event_date" value="<?= htmlspecialchars($event['date']) ?>">
+                            <input type="hidden" name="reserved_seats" value="<?= implode(',', $seatNumbers) ?>">
+                            <button type="submit">Trimite bilete</button>
+                        </form>
+                    </td>
+                </tr>
+                <?php
+            }
+            ?>
+        </tbody>
+    </table>
+
+
     <br>
     <?php 
         if($user['rights'] === 'admin') {
