@@ -116,6 +116,7 @@ tr td:last-child {
     width: fit-content;
     text-align: center;
     padding: 0 2px;
+    margin-bottom: 10px;
 }
 
 .users-management td {
@@ -155,4 +156,16 @@ input {
 .left {
     width: 100%;
     text-align: left !important;
+}
+
+.atribut {
+    min-width: 200px;
+    text-align: left !important;
+    margin: 2px;
+}
+
+.piechart {
+    display: block;
+    margin: auto;
+    width: 100%;
 }

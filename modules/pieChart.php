@@ -29,7 +29,8 @@
                 $graph->Add($piePlot);
         
                 // Debug to confirm image generation
-                $outputPath = __DIR__ . '/../img/chart.png';
+                // $outputPath = __DIR__ . '/../img/chart.png';
+                $outputPath = realpath(__DIR__ . '/../img') . DIRECTORY_SEPARATOR . 'chart_' . uniqid() . '.png';
                 $graph->Stroke($outputPath);
         
                 if (!file_exists($outputPath)) {

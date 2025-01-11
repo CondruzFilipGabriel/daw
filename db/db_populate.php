@@ -67,21 +67,30 @@ return [
         FOREIGN KEY (user_id) REFERENCES users(id)
     )",
 
-// Create the Analytics Table
-"CREATE TABLE IF NOT EXISTS analytics (
+    // Create the Analytics Table
+    "CREATE TABLE analytics (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        session_id INT NOT NULL,
-        page VARCHAR(255) NOT NULL,
-        page_load_count INT DEFAULT 0,
+        user_id INT NULL,
+        session_id VARCHAR(255) NULL,
+        ip_address VARCHAR(45) NOT NULL,
+        country VARCHAR(100) NULL,
+        city VARCHAR(100) NULL,
+        device_type VARCHAR(50) NOT NULL,
         browser VARCHAR(100) NOT NULL,
         operating_system VARCHAR(100) NOT NULL,
-        browser VARCHAR(100) NOT NULL,
-        device_type ENUM('desktop', 'mobile') NOT NULL,
-        date DATE NOT NULL,
-        ip_address VARCHAR(45) NOT NULL,
-        geolocation VARCHAR(255),        
-        FOREIGN KEY (session_id) REFERENCES sessions(id)
+        page_url VARCHAR(255) NOT NULL,
+        previous_page VARCHAR(255) NULL,
+        page_load_time FLOAT NOT NULL,
+        server_response_time FLOAT NOT NULL,
+        time_spent FLOAT NULL,
+        pages_viewed INT DEFAULT 1,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAM
     )",
+
+    // Improve analytics performance
+    "CREATE INDEX idx_session_id ON analytics(session_id)",
+    "CREATE INDEX idx_ip_address ON analytics(ip_address)",
+    "CREATE INDEX idx_created_at ON analytics(created_at)",
 
     // Create the Hall Table
     "CREATE TABLE IF NOT EXISTS hall (

@@ -538,6 +538,96 @@
             $stmt->close();
         
             return $tickets;
-        }        
+        }
+
+        // Method for inserting analytics data
+        public function insertAnalyticsData($userId, $sessionId, $ipAddress, $country, $city, $deviceType, $browser, $operatingSystem, $pageUrl, $previousPage, $pageLoadTime, $serverResponseTime, $timeSpent, $pagesViewed) {
+            $query = "INSERT INTO analytics (user_id, session_id, ip_address, country, city, device_type, browser, operating_system, page_url, previous_page, page_load_time, server_response_time, time_spent, pages_viewed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $this->db_con->prepare($query);
+
+            if (!$stmt) {
+                Debug::log("Failed to prepare analytics insert: " . $this->db_con->error);
+                return false;
+            }
+
+            $stmt->bind_param("isssssssssdddd", $userId, $sessionId, $ipAddress, $country, $city, $deviceType, $browser, $operatingSystem, $pageUrl, $previousPage, $pageLoadTime, $serverResponseTime, $timeSpent, $pagesViewed);
+
+            if (!$stmt->execute()) {
+                Debug::log("Failed to execute analytics insert: " . $stmt->error);
+                return false;
+            }
+
+            $stmt->close();
+            return true;
+        }
+
+        public function getAnalyticsGroupBy($column) {
+            $query = "SELECT $column AS name, COUNT(*) AS value FROM analytics GROUP BY $column ORDER BY value DESC";
+            $result = $this->db_con->query($query);
+
+            if (!$result || $result->num_rows === 0) {
+                return [['name' => 'Fără date', 'value' => 1]];
+            }
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
+
+        public function getTotalAnalyticsCount() {
+            $query = "SELECT COUNT(DISTINCT session_id) AS total FROM analytics";
+            $result = $this->db_con->query($query);
+            if ($result) {
+                $data = $result->fetch_assoc();
+                return $data['total'];
+            }
+            return 0;
+        }
+
+        public function getTotalPagesViewed() {
+            $query = "
+                SELECT SUM(latest_pages_viewed) AS total_pages
+                FROM (
+                    SELECT MAX(pages_viewed) AS latest_pages_viewed
+                    FROM analytics
+                    GROUP BY session_id
+                ) AS session_views
+            ";
+
+            $result = $this->db_con->query($query);
+            if ($result) {
+                $data = $result->fetch_assoc();
+                return $data['total_pages'];
+            }
+            return 0;
+        }
+
+        public function getAverageTimeSpent() {
+            $query = "SELECT AVG(time_spent) AS avg_time_spent FROM analytics";
+            $result = $this->db_con->query($query);
+            if ($result) {
+                $data = $result->fetch_assoc();
+                return $data['avg_time_spent'];
+            }
+            return 0;
+        }
+
+        public function getAveragePageLoadTime() {
+            $query = "SELECT AVG(page_load_time) AS avg_page_load_time FROM analytics";
+            $result = $this->db_con->query($query);
+            if ($result) {
+                $data = $result->fetch_assoc();
+                return $data['avg_page_load_time'];
+            }
+            return 0;
+        }
+
+        // Fetch the last page viewed by any user
+        public function getLastPageViewed() {
+            $query = "SELECT previous_page FROM analytics WHERE previous_page IS NOT NULL ORDER BY created_at DESC LIMIT 1";
+            $result = $this->db_con->query($query);
+            if ($result) {
+                $data = $result->fetch_assoc();
+                return $data['previous_page'] ?? 'N/A';
+            }
+            return 'N/A';
+        }
     };
 ?>

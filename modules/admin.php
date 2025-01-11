@@ -11,6 +11,15 @@
     $allEvents = $db->getAllEvents();
 
     $uploadDir = realpath(__DIR__ . '/../img/events') . DIRECTORY_SEPARATOR;
+
+    // Fetch analytics data for pie charts
+    $analyticsData = [
+        'country' => $db->getAnalyticsGroupBy('country'),
+        'browser' => $db->getAnalyticsGroupBy('browser'),
+        'os' => $db->getAnalyticsGroupBy('operating_system'),
+        'device_type' => $db->getAnalyticsGroupBy('device_type')
+    ];
+    require_once 'modules/pieChart.php';
 ?>
 
 <h3>Administrare utilizatori</h3>
@@ -174,13 +183,53 @@
     </tbody>
 </table>
 
-<script>
-    // Show the selected file name next to the button
-    document.getElementById('fileInput<?= $eventData['id'] ?>').addEventListener('change', function() {
-        const fileName = this.files.length > 0 ? this.files[0].name : 'No file chosen';
-        document.getElementById('fileName<?= $eventData['id'] ?>').textContent = fileName;
-    });
-</script>
+<h3>Server Analytics</h3>
+<table class="users-management">
+    <thead>
+        <tr>
+            <th>Atribut</th>
+            <th>Valoare</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="atribut">Vizitatori unici</td>
+            <td><?= $db->getTotalAnalyticsCount() ?></td>
+        </tr>
+        <tr>
+            <td class="atribut">Pagini vizualizate</td>
+            <td><?= $db->getTotalPagesViewed() ?></td>
+        </tr>
+        <tr>
+            <td class="atribut">Timpul mediu pe pagini</td>
+            <td><?= number_format($db->getAverageTimeSpent(), 2) ?> secunde</td>
+        </tr>
+        <tr>
+            <td class="atribut">Timpul mediu de incărcare a paginilor</td>
+            <td><?= number_format($db->getAveragePageLoadTime(), 2) ?> secunde</td>
+        </tr>
+        <tr>
+            <td class="atribut">Ultima pagină vizualizată</td>
+            <td><?= htmlspecialchars($db->getLastPageViewed()) ?></td>
+        </tr>
+    </tbody>
+</table>
+<br>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    <div class="piechart">
+        <img src="<?= PieChart::render('Distribuție pe Țări', $analyticsData['country']) ?>" alt="Distribuție pe Țări">
+    </div>
+    <div class="piechart">
+        <img src="<?= PieChart::render('Distribuție Browser', $analyticsData['browser']) ?>" alt="Distribuție Browser">
+    </div>
+    <div class="piechart">
+        <img src="<?= PieChart::render('Distribuție Sisteme de Operare', $analyticsData['os']) ?>" alt="Distribuție Sisteme de Operare">
+    </div>
+    <div class="piechart">
+        <img src="<?= PieChart::render('Distribuție Dispozitive', $analyticsData['device_type']) ?>" alt="Distribuție Dispozitive">
+    </div>
+</div>
 
 <?php
     include_once 'modules/footer.php';
