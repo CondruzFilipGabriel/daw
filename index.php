@@ -3,11 +3,12 @@
     $events = $db->getAllEvents();
 ?>
 
+<h3><?= $alert ?></h3>
+
 <div class="event-container">
 
 <?php foreach ($events as $event) { ?>
     <form class="event-article" action="rezerva.php" method="POST">
-        <!-- <img class="event-image" src="img/events/generic/<?= $event['image'] ?>" alt="Vals"> -->
         <img class="event-image" src="
             <?php
                 $eventImagePath = 'img/events/';
@@ -62,6 +63,8 @@
 <h5 id="disclaimer">
     <b>Acest site este un proiect școlar și nu reprezintă o entitate reală</b>
 </h5>
+
+<a class="contact" href="modules/contact.php">Contact</a>
 
 <script src="js/index.js"></script>
 

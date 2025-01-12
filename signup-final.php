@@ -1,7 +1,6 @@
 <?php
     require_once 'modules/header.php';
 
-    // Debug::log('se executa');
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
             $_SESSION['alert'] = "Session expired or invalid request. Please try again.";
@@ -14,14 +13,14 @@
         $password = trim($_POST['password']);
         $confirmPassword = trim($_POST['confirm_password']);
 
-        // Validate verification code
+        // Validam codul de verificare
         if (!isset($_SESSION['security_code']) || $_SESSION['security_code'] != $code || time() > $_SESSION['security_code_expiry']) {
             $_SESSION['alert'] = "Cod de verificare invalid sau expirat.";
             header("Location: /ProiectDaw/signup-final.php");
             exit();
         }
 
-        // Validate passwords
+        // Validam parolele
         if ($password !== $confirmPassword) {
             $_SESSION['alert'] = "Parolele nu se potrivesc.";
             header("Location: /ProiectDaw/signup-final.php");
@@ -37,22 +36,18 @@
         // Hash the password
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // Create user
+        // Cream utilizatorul
         $db = DB::getInstance();
-        // $session = new Session();
-        // Debug::log('urmeaza sa se creeze utilizatorul');
         $userId = $db->createUser($_SESSION['name'], $_SESSION['email'], $hashedPassword);
         
         if ($userId) {
-            // Debug::log('utilizator creat cu succes');
-            // Log the user in
+            // Logam userul
             $session->new_session($userId);
 
-            // Redirect to user-login.php
+            // Redirect -> user-login.php
             header("Location: /ProiectDaw/user-login.php");
             exit();
         } else {
-            // Debug::log('utilizatorul nu a putut fi creat');
             $_SESSION['alert'] = "Nu s-a putut crea utilizatorul. Va rugm reincercati.";
             header("Location: /ProiectDaw/signup-final.php");
             exit();

@@ -1,38 +1,26 @@
 <?php    
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         include_once __DIR__ . '/header.php';
-        // Debug::log('loaded the login.php file');
-        // Debug::log($_SERVER['REQUEST_METHOD']);
-        // Debug::log('post request');
-        // Debug::log("POST CSRF Token: " . ($_POST['csrf_token'] ?? 'Not set'));
-        // Debug::log("Session CSRF Token: " . ($_SESSION['csrf_token'] ?? 'Not set'));
 
         if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-            // Debug::log('verifying session');
             $_SESSION['alert'] = "Session expired or invalid request. Please try again.";
             header("Location: /ProiectDaw/user-login.php");
             exit();
         }
-        // Debug::log('session ok, proceding to login');
+
         // Sanitize user inputs
         $sanitized_email = sanitize_input($_POST['email']);
         $sanitized_pass = trim($_POST['password']);
-        // Debug::log($sanitized_email);
-        // Debug::log($sanitized_pass);
 
-        // Attempt login
+        // login
         $user = $session->login($sanitized_email, $sanitized_pass);
     
-        // Handle login success or failure
+        // verificam: login success sau nu?
         if ($user) {
-            // Redirect to index.php if login is successful
-            // Debug::log('successfully logged in');
             header("Location: /ProiectDaw/index.php");
             $_SESSION['alert'] = null;
             exit();
         } else {
-            // Redirect back to the login page with an error message
-            // Debug::log('Invalid username / passwor');
             $_SESSION['alert'] = "Invalid username and/or password!";
             header("Location: /ProiectDaw/user-login.php");
             exit();

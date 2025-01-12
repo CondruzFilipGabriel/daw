@@ -8,15 +8,14 @@
     class PieChart
     {
         /**
-         * Renders a pie chart and returns it as a base64-encoded string.
-         *
-         * @param array $data Array of objects: [ { "value": numeric, "name": string } ].
-         * @return string Base64-encoded string of the chart image.
+         * Creaza un pie-chart si returneaza un string base64-encoded
+         * 
+         * Primeste ca parametri un array de forma:  [ { "value": numeric, "name": string } ]
          */
         
-        public static function render(string $title, array $data): string {
+         public static function render(string $title, array $data): string {
             try {
-                // Extract values and names
+                // Extragem valorile si numele
                 $values = array_map(fn($item) => $item['value'], $data);
                 $names = array_map(fn($item) => $item['name'], $data);
         
@@ -28,13 +27,19 @@
                 $piePlot->SetLegends($names);
                 $graph->Add($piePlot);
         
-                // Debug to confirm image generation
-                // $outputPath = __DIR__ . '/../img/chart.png';
-                $outputPath = realpath(__DIR__ . '/../img') . DIRECTORY_SEPARATOR . 'chart_' . uniqid() . '.png';
+                // Generate a filename based on the title
+                $filename = str_replace(' ', '_', strtolower($title)) . '.png';
+                $outputPath = realpath(__DIR__ . '/../img') . DIRECTORY_SEPARATOR . $filename; // pentru Windows
+        
+                // Stergem fisierele care au acelasi nume (pentru a nu exista probleme la scriere)
+                if (file_exists($outputPath)) {
+                    unlink($outputPath);
+                }
+        
                 $graph->Stroke($outputPath);
         
                 if (!file_exists($outputPath)) {
-                    Debug::log("Failed to generate image file at $outputPath.");
+                    Debug::log("Nu s-au putut genera fisierul $outputPath.");
                 }
         
                 $imageData = file_get_contents($outputPath);
@@ -43,6 +48,6 @@
                 Debug::log("JPGraph Error: " . $e->getMessage());
                 return False;
             }
-        }
+        }        
     }
 ?>

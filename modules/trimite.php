@@ -10,11 +10,11 @@
             // Decode JSON data
             $data = json_decode($jsonData, true);
 
-            // Generate the invoice
+            // Generam factura
             $factura = new Factura();
             $filePath = $factura->creazaFactura($jsonData, $userId, $beneficiar);
 
-            // Generate the tickets
+            // Generam biletele
             $bilet = new Bilet();
             $tickets = [];
             $seatIndex = 0;
@@ -39,14 +39,14 @@
                 }
             }
 
-            // Create the email body
+            // Cream body-ul pentru email
             $emailBody = "<p>Draga <b>$beneficiar</b></p> 
                           <p>Atasat puteti descarca " .
                           (count($reservedSeats) > 1 ? "biletele si factura fiscala" : "biletul si factura fiscala") . " aferenta platii acestora.</p> 
                           <p>Va multumim ca ati ales Sala Regala de Muzica!</p> 
                           <p>Va dorim o experienta cat mai placuta!</p>";
 
-            // Send the email
+            // Trimitem mail-ul
             $mail = new Mail();
             $attachments = [$filePath];
             $sent = $mail->send(
@@ -61,12 +61,12 @@
                 header("Location: /ProiectDaw/user-login.php");
                 exit;
             } else {
-                Debug::log("Failed to send email (creazaSiTrimiteFacturaSiBilete) to $emailBeneficiar");
+                Debug::log("Eroare in trimitea mailului (creazaSiTrimiteFacturaSiBilete) to $emailBeneficiar");
             }
         }
 
         public function trimiteBilete($beneficiar, $emailBeneficiar, $eventName, $eventDate, $reservedSeats) {
-            // Generate the tickets
+            // Generam biletele
             $bilet = new Bilet();
             $tickets = [];
             foreach ($reservedSeats as $seat) {
@@ -77,14 +77,14 @@
                 ];
             }
 
-            // Create the email body
+            // Generam body-ul pentru email
             $emailBody = "<p>Draga <b>$beneficiar</b></p> 
                           <p>Atasat puteti descarca " .
                           (count($reservedSeats) > 1 ? "biletele dumneavoastra" : "biletul dumneavoastra") . ".</p> 
                           <p>Va multumim ca ati ales Sala Regala de Muzica!</p> 
                           <p>Va dorim o experienta cat mai placuta!</p>";
 
-            // Send the email
+            // Trimitem emailul
             $mail = new Mail();
             $sent = $mail->send(
                 $emailBeneficiar,
@@ -98,7 +98,7 @@
                 header("Location: /ProiectDaw/user-login.php");
                 exit;
             } else {
-                Debug::log("Failed to send email to $emailBeneficiar");
+                Debug::log("Eroare in trimiterea emailului catre $emailBeneficiar");
             }
         }
     }

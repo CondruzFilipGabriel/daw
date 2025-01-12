@@ -1,5 +1,5 @@
 <?php
-    // Helper function to get client IP address
+    // => Client IP
     function getClientIP() {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             return $_SERVER['HTTP_CLIENT_IP'];
@@ -10,17 +10,17 @@
         }
     }
 
-    // Helper function to detect device type
+    // => tipul de dispozitiv
     function getDeviceType() {
         $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
         if (preg_match('/mobile|android|iphone|ipad/', $userAgent)) {
-            return 'Mobile';
+            return 'Mobil';
         } else {
             return 'Desktop';
         }
     }
 
-    // Helper function to parse browser info
+    // => browser
     function getBrowser() {
         $userAgent = $_SERVER['HTTP_USER_AGENT'];
         if (strpos($userAgent, 'Firefox') !== false) return 'Firefox';
@@ -28,10 +28,10 @@
         if (strpos($userAgent, 'Safari') !== false) return 'Safari';
         if (strpos($userAgent, 'Opera') !== false) return 'Opera';
         if (strpos($userAgent, 'Edge') !== false) return 'Edge';
-        return 'Other';
+        return 'Altele';
     }
 
-    // Helper function to get OS
+    // => sistemul de operare
     function getOS() {
         $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
         if (strpos($userAgent, 'windows') !== false) return 'Windows';
@@ -39,10 +39,10 @@
         if (strpos($userAgent, 'linux') !== false) return 'Linux';
         if (strpos($userAgent, 'android') !== false) return 'Android';
         if (strpos($userAgent, 'iphone') !== false) return 'iOS';
-        return 'Other';
+        return 'Altele';
     }
 
-    // Start measuring page load time
+    // incepe masuratoarea page load time
     $pageLoadStart = microtime(true);
 
     register_shutdown_function(function() use ($pageLoadStart, $db) {
@@ -58,20 +58,20 @@
         $browser = getBrowser();
         $operatingSystem = getOS();
 
-        // Geolocation integration
+        // Geolocation
         require_once __DIR__ . '/geolocation.php';
         $location = Geolocation::getLocation($ipAddress);
         $country = $location['country'] ?? NULL;
         $city = $location['city'] ?? NULL;
 
-        // Calculate time spent on the previous page
+        // calculam timpul petrecut pe pagina anterioara
         $timeSpent = isset($_SESSION['last_page_time']) ? microtime(true) - $_SESSION['last_page_time'] : 0;
         $_SESSION['last_page_time'] = microtime(true);
 
-        // Increment pages viewed in session
+        // crestem numarul de pagini vizualizate din sesiune
         $_SESSION['pages_viewed'] = ($_SESSION['pages_viewed'] ?? 0) + 1;
 
-        // Insert analytics data using the new method in DB
+        // inseram datele de analytics in BD
         $success = $db->insertAnalyticsData(
             $userId,
             $sessionId,

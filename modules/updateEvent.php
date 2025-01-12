@@ -1,13 +1,13 @@
 <?php
     include_once 'header.php';
 
-    // Restrict access to admins only
+    // Admins only
     if (!$user || $user['rights'] != 'admin') {
         header("Location: /ProiectDaw/index.php");
         exit();
     }
 
-    // Validate and update the event
+    // Validam continutul si il actualizam (daca e cazul)
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $eventId = intval($_POST['id']);
         $name = trim($_POST['name']);
@@ -16,7 +16,7 @@
         $price = floatval($_POST['price']);
         $categoryId = intval($_POST['category_id']);
 
-        // Handle image upload (no need to update the DB)
+        // Gestionam upload-ul imaginilor (nu si in baza de date)
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
             $uploadDir = __DIR__ . '/../img/events/';
             $fileTmpPath = $_FILES['image']['tmp_name'];
@@ -27,7 +27,7 @@
                 $newFileName = $eventId . '.' . $fileExtension;
                 $destPath = $uploadDir . $newFileName;
 
-                // Remove any existing image
+                // Stergem imaginile existente
                 foreach ($allowedExtensions as $ext) {
                     $existingFile = $uploadDir . $eventId . '.' . $ext;
                     if (file_exists($existingFile)) {
@@ -36,19 +36,19 @@
                 }
 
                 if (!move_uploaded_file($fileTmpPath, $destPath)) {
-                    Debug::log("Error moving uploaded file.");
+                    Debug::log("Eroare la scrierea fisierelor uploadate.");
                 }
             } else {
-                Debug::log("Invalid file type. Allowed types: jpg, jpeg, png, gif, webp.");
+                Debug::log("Tip de imagine invalid. Tipuri permise: jpg, jpeg, png, gif, webp.");
             }
         }
 
-        // Update event details (without touching the image field)
+        // Actualizam detaliile eventului (fara sa modificam campul imagine)
         if ($db->updateEvent($eventId, $name, $date, $startHour, $price, $categoryId, null)) {
             header("Location: /ProiectDaw/user-login.php");
             exit();
         } else {
-            Debug::log("Error updating event.");
+            Debug::log("Eroare la actulizarea eventului.");
         }
     }
 ?>

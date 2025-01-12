@@ -1,4 +1,7 @@
 <?php
+    // Facturile vor fi salvate ca: users/user_id/factura.data_si_ora.pdf
+    // Acesta e trimis pe email doar cand se face rezervarea si nu mai poate fi descarcat ulterior
+
     require_once __DIR__ . '/../fpdf/fpdf.php';
 
     class Factura {
@@ -13,19 +16,19 @@
             // Decode JSON data
             $data = json_decode($jsonData, true);
 
-            // Ensure the user directory exists
+            // Verificam existenta directorului (sau il cream daca nu exista)
             $userDir = "users/" . $userId;
             if (!file_exists($userDir)) {
                 mkdir($userDir, 0777, true);
             }
 
-            // Generate unique filename
+            // Generam fisierul PDF
             $fileName = $userDir . "/" . "factura.". date('Ymd_His') . ".pdf";
 
-            // Add a page and generate the content
+            // Adaugam o pagina si generam continutul
             $this->pdf->AddPage();
 
-            // Issuer Details
+            // Detalii emitent
             $this->pdf->SetFont('Helvetica', '', 10);
             $this->pdf->Cell(100, 6, 'Sala Regala de Muzica', 0, 0);
             $this->pdf->Cell(0, 6, 'Cumparator: ' . $beneficiar, 0, 1, 'R');
@@ -37,14 +40,14 @@
             $this->pdf->Cell(0, 6, '', 0, 1, 'R');
             $this->pdf->Ln(10);
 
-            // Add Title and Current Date
+            // Titlu si data curenta
             $this->pdf->SetFont('Helvetica', 'B', 14);
             $this->pdf->Cell(0, 10, 'FACTURA', 0, 1, 'C');
             $this->pdf->SetFont('Helvetica', '', 12);
             $this->pdf->Cell(0, 10, 'Data: ' . date('d-m-Y'), 0, 1, 'C');
             $this->pdf->Ln(5);
 
-            // Add Table Header
+            // Table Header
             $this->pdf->SetFont('Helvetica', 'B', 10);
             $this->pdf->Cell(10, 10, 'Nr.', 1);
             $this->pdf->Cell(70, 10, 'Denumirea produselor sau a serviciilor', 1);
@@ -53,7 +56,7 @@
             $this->pdf->Cell(30, 10, 'Pret unitar', 1);
             $this->pdf->Cell(30, 10, 'Valoarea', 1, 1);
 
-            // Add Ticket Data
+            // Date despre blete
             $this->pdf->SetFont('Helvetica', '', 10);
             $counter = 1;
             foreach ($data['tickets'] as $ticket) {
@@ -71,12 +74,12 @@
                 $counter++;
             }
 
-            // Add Total
+            // Pret total
             $this->pdf->SetFont('Helvetica', 'B', 10);
             $this->pdf->Cell(150, 10, 'Total', 1);
             $this->pdf->Cell(30, 10, number_format($data['total'], 2) . ' RON', 1, 1);
 
-            // Save the file
+            // Salvam fisierul
             $this->pdf->Output('F', $fileName);
 
             return $fileName;

@@ -1,6 +1,5 @@
 <?php
     include_once 'modules/header.php';
-
     include_once 'modules/mail.php';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -26,12 +25,12 @@
         }
         $_SESSION['email'] = $email;
 
-        // Generate verification code
+        // Generam codul de verificare
         $verificationCode = rand(100000, 999999);
         $_SESSION['security_code'] = $verificationCode;
         $_SESSION['security_code_expiry'] = time() + 300; // Valid for 5 minutes
         
-        // Send email
+        // Trimitem email
         $mail = new Mail();
         $subject = "Cod de verificare pentru creare utilizator";
         $body = "Buna, $name! <br><br> Codul tau de verificare este: <b>$verificationCode</b><br><br> Este valabil timp de 5 minute.";

@@ -5,7 +5,7 @@
         $htmlContent = file_get_contents($url);
 
         if ($htmlContent === false) {
-            throw new Exception("Could not fetch the webpage content.");
+            throw new Exception("Nu s-a putut prelua continutul paginii.");
         }
 
         $dom = new DOMDocument();
@@ -21,12 +21,12 @@
             if ($paragraph) {
                 echo "<div>{$paragraph->nodeValue}</div>";
             } else {
-                echo "Paragraph not found.";
+                echo "Nu a fost gasit pragraful cautat.";
             }
         } else {
-            echo "Div not found.";
+            echo "Nu a fost gasit div-ul cautat.";
         }
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+        echo "Eroare: " . $e->getMessage();
     }
 ?>

@@ -164,8 +164,61 @@ input {
     margin: 2px;
 }
 
+.atribut2 {
+    min-width: 200px;
+    text-align: right !important;
+    margin: 2px;
+}
+
+.last_ips_container {
+    max-height: 100px; 
+    overflow-y: auto;
+}
+
+.last_ips_ul {
+    list-style-type: none; 
+    padding: 0; 
+    margin: 0;
+}
+
 .piechart {
     display: block;
     margin: auto;
     width: 100%;
+}
+
+.contact {
+    position: fixed;
+    right: 100px;
+    bottom: 50px;
+    color: black;
+    border: 2px solid var(--shadowcolor);
+    box-shadow: 2px 2px lightgray;
+    padding: 5px;
+    border-radius: 15%;
+}
+
+.contact:active {
+    border: 2px  solid var(--shadowcolor) inset;
+}
+
+.contact:hover {
+    font-weight: bolder;
+}
+
+.contactFormContainer {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+}
+
+.contactFormContainer * {
+    display: block;
+    margin: 30px auto;
+    width: 300px;
+}
+
+.contactFormContainer textarea {
+    resize: none;
+    height: 200px;
 }

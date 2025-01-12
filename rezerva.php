@@ -1,13 +1,13 @@
 <?php
     include_once 'modules/header.php';
 
-    // Check if the user is logged in
+    // Verificam daca utilizatorul e autentificat
     if (!$user) {
         header("Location: user-login.php");
         exit;
     }
 
-    // Validate the input data
+    // Validam datele introduse
     $numberOfSeats = $_POST['number_of_seats'] ?? null;
     $eventId = $_POST['event_id'] ?? null;
     $eventName = $_POST['event_name'] ?? null;
@@ -25,7 +25,7 @@
         exit;
     }
 
-    // Reserve seats
+    // Rezervam locurile
     $reservationSuccess = $db->reserveSeats($eventId, (int)$numberOfSeats, (float)$eventPrice, (int)$user['user_id']);
 
     if (!$reservationSuccess) {
@@ -34,7 +34,7 @@
         exit;
     }
 
-    // Prepare data for invoice and ticket creation
+    // Pregatim datele pentru factura si bilete
     $jsonData = json_encode([
         "tickets" => [
             [
@@ -51,7 +51,7 @@
     $beneficiar = $user['name'];
     $emailBeneficiar = $user['email'];
 
-    // Load the necessary module and send invoice and tickets
+    // incarcam modulele necesare si trimitem factura si biletele
     include_once 'modules/trimite.php';
     Trimite::creazaSiTrimiteFacturaSiBilete($jsonData, $user['user_id'], $beneficiar, $emailBeneficiar, $reservationSuccess);
 

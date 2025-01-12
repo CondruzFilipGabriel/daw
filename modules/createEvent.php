@@ -1,13 +1,13 @@
 <?php
     include_once 'header.php';
 
-    // Restrict access to admins only
+    // Admins only
     if (!$user || $user['rights'] != 'admin') {
         header("Location: /ProiectDaw/index.php");
         exit();
     }
 
-    // Validate and create the event
+    // Validam si cream eventul
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = trim($_POST['name']);
         $date = trim($_POST['date']);
@@ -15,11 +15,11 @@
         $price = floatval($_POST['price']);
         $categoryId = intval($_POST['category_id']);
 
-        // Insert the event and get the event ID
+        // Inseram eventul si returnam id-ul (folosit pentru eventuala imagine dedicata)
         $eventId = $db->createEvent($name, $date, $startHour, $price, $categoryId);
 
         if ($eventId) {
-            // Handle image upload
+            // Uploadam imaginea (daca exista)
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $uploadDir = __DIR__ . '/../img/events/';
                 $fileTmpPath = $_FILES['image']['tmp_name'];
@@ -29,21 +29,19 @@
                 if (in_array($fileExtension, $allowedExtensions)) {
                     $newFileName = $eventId . '.' . $fileExtension;
                     $destPath = $uploadDir . $newFileName;                  
-
-                    if (move_uploaded_file($fileTmpPath, $destPath)) {
-                        Debug::log("Image uploaded as: " . $newFileName);
-                    } else {
-                        Debug::log("Error moving uploaded file.");
+                    $successfulMove = move_uploaded_file($fileTmpPath, $destPath);
+                    
+                    if (!$successfulMove) {
+                        Debug::log("Erroare la mutarea sau uploadarea fisierului.");
                     }
                 } else {
-                    Debug::log("Invalid file type. Allowed types: jpg, jpeg, png, gif, webp.");
+                    Debug::log("Tip invalid de imagine introdus. Sunt permise doar: jpg, jpeg, png, gif, webp.");
                 }
             }
-
             header("Location: /ProiectDaw/user-login.php");
             exit();
         } else {
-            Debug::log("Error creating event.");
+            Debug::log("Eroare in crearea eventului.");
         }
     }
 ?>

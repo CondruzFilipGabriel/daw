@@ -7,7 +7,7 @@
         exit;
     }
 
-    // Get data from the POST request
+    // Preluam datele din POST request
     $eventName = $_POST['event_name'] ?? null;
     $eventDate = $_POST['event_date'] ?? null;
     $reservedSeats = $_POST['reserved_seats'] ?? null;
@@ -18,18 +18,18 @@
         exit;
     }
 
-    // Convert reserved seats to an array
+    // Convertim locurile rezervate intr-un array
     $reservedSeatsArray = explode(',', $reservedSeats);
 
-    // Fetch user details
+    // Preluam datele userului
     $beneficiar = $user['name'];
     $emailBeneficiar = $user['email'];
 
-    // Call the trimiteBilete method
+    // Trimitem biletele cu metoda trimiteBilete()
     $trimite = new Trimite();
     $trimite->trimiteBilete($beneficiar, $emailBeneficiar, $eventName, $eventDate, $reservedSeatsArray);
 
-    // Redirect to user-login.php
+    // Redirect la user-login.php
     header("Location: /ProiectDaw/user-login.php");
     exit;
 ?>

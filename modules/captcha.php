@@ -8,7 +8,7 @@
         private $secretKey;
 
         public function __construct() {            
-            // Load credentials
+            // Incarcam credentialele
             $credentials = json_decode(file_get_contents(__DIR__ . '/../credentials.json'), true);
 
             if (!$credentials || !isset($credentials['recaptcha_site_key'], $credentials['recaptcha_secret_key'])) {
@@ -18,10 +18,10 @@
             $this->siteKey = $credentials['recaptcha_site_key'];
             $this->secretKey = $credentials['recaptcha_secret_key'];
 
-            // Include the necessary scripts for reCAPTCHA
+            // Includem scripturile necesare pentru reCAPTCHA
             $this->includeScripts();
             
-            // Handle CAPTCHA validation if it's a POST request
+            // Validarea CAPTCHA validation daca este o cerere tip POST
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $this->handlePostRequest();
             }
@@ -48,10 +48,7 @@
             if (!$this->validate($token, $action)) {
                 header("Location: you-are-a-robot.php");
             } 
-            // else {
-            //     header("Location: index.php");
-            // }
-
+            
             exit();
         }
 

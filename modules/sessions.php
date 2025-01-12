@@ -5,38 +5,38 @@
         public function __construct() {
             $this->db = DB::getInstance();
             session_start([
-                'cookie_lifetime' => 86400, // 1 day
-                'cookie_secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on', // Only secure cookies over HTTPS
-                'cookie_httponly' => true, // Prevent JavaScript access to session cookies
-                'cookie_samesite' => 'Strict' // Prevent CSRF and cross-origin issues
-            ]);            
+                'cookie_lifetime' => 86400, // 1 zi
+                'cookie_secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on', // Doar cookie-uri securizate pe HTTPS
+                'cookie_httponly' => true, // Nu permite JavaScript sa acceseze cookie-urile de sesiune
+                'cookie_samesite' => 'Strict' // Prevenirea atacurilor CSRF si cross-origin
+            ]);
         }
 
-        // Create a new session
+        // Cream o noua sesiune
         public function new_session($userId) {
             if (is_int($userId) && $userId > 0) {
-                $token = bin2hex(random_bytes(32)); // Generate a secure token
+                $token = bin2hex(random_bytes(32)); // Generam un token securizat
                 $result = $this->db->createSession($userId, $token);
 
                 if ($result) {
                     $_SESSION['user_token'] = $token;
                     return $token;
                 } else {
-                    Debug::log("Session creation failed for user ID: " . $userId);
+                    Debug::log("Eroare la crearea sesiunii pentru userul cu ID: " . $userId);
                     return false;
                 }
             } else {
-                Debug::log("User creation failed");
+                Debug::log("Eroare la crearea userului!");
                 return false;
             }
         }
 
-                // Login the user and create a session
+        // Conectam utilizatorul si initiem o sesiune noua
         public function login($email, $password) {
             $user = $this->db->login($email, $password);
 
             if ($user) {
-                // Create a session for the user
+                // Cream o sesiune pentru utilizator
                 $this->new_session($user['id']);
                 return $user;
             }
@@ -44,7 +44,7 @@
             return null;
         }
 
-        // Retrieve user data if logged in
+        // Returnam datele userului daca e logat
         public function retrieve_user_data() {
             if (!isset($_SESSION['user_token'])) {
                 return null;
@@ -57,11 +57,11 @@
         // Sign out
         public function sign_out() {
             if (isset($_SESSION['user_token'])) {
-                // Remove the session from the database
+                // Stergem sesiunea din baza de date
                 $this->db->endSession($_SESSION['user_token']);
                 unset($_SESSION['user_token']);
             }
-            session_destroy(); // Destroy the PHP session
+            session_destroy(); // Distrugem sesiunea PHP
         }        
     }
 ?>

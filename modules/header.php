@@ -10,13 +10,12 @@
 
     if (!isset($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-        // Debug::log("header.php: Generated CSRF Token: " . $_SESSION['csrf_token']);
     }
     
     require_once __DIR__ . '/analytics.php';
 
     $alert = isset($_SESSION['alert']) ? $_SESSION['alert'] : null;
-    unset($_SESSION['alert']); // Clear it after reading
+    unset($_SESSION['alert']);
     
     function sanitize_input($input) {
         return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
@@ -45,7 +44,6 @@
     <link rel="stylesheet" href="/ProiectDaw/css/header.css">
     <link rel="stylesheet" href="/ProiectDaw/css/index.css">
     <link rel="stylesheet" href="/ProiectDaw/css/footer.css">
-    <!-- <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css"> -->
 </head>
 
 <body>

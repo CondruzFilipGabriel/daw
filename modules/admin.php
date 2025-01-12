@@ -1,7 +1,7 @@
 <?php
     include_once 'modules/header.php';
 
-    // Restrict access to admins only
+    // Admins only
     if (!$user || $user['rights'] !== 'admin') {
         header("Location: /ProiectDaw/index.php");
         exit();
@@ -12,7 +12,7 @@
 
     $uploadDir = realpath(__DIR__ . '/../img/events') . DIRECTORY_SEPARATOR;
 
-    // Fetch analytics data for pie charts
+    // analytics data pentru pie charts
     $analyticsData = [
         'country' => $db->getAnalyticsGroupBy('country'),
         'browser' => $db->getAnalyticsGroupBy('browser'),
@@ -112,22 +112,22 @@
                         ?>
 
                         <?php if (!$hasImage): ?>
-                            <!-- Default file input when no image exists -->
+                            <!-- Default cand nu exista imagine dedicata pentru event -->
                             <input type="file" name="image" accept="image/*">
                         <?php else: ?>
 
-                            <!-- Custom button when an image exists -->
+                            <!-- Afisare cand exista imagine dedicata pentru event -->
                             <input type="file" name="image" accept="image/*" id="fileInput<?= $eventData['id'] ?>" style="display: none;">
 
                             <button type="button" style="text-align: left !important;" onclick="document.getElementById('fileInput<?= $eventData['id'] ?>').click();">
                                 Replace File
                             </button>
 
-                            <!-- Placeholder for displaying selected filename -->
+                            <!-- Placeholder pentru afisarea fisierului selectat -->
                             <span id="fileName<?= $eventData['id'] ?>"></span>
 
                             <script>
-                                // Show the first 10 characters of the selected file name
+                                // Afiseaza primele 10 caractere din numele fisierului selectat
                                 document.getElementById('fileInput<?= $eventData['id'] ?>').addEventListener('change', function() {
                                     const fileName = this.files.length > 0 ? this.files[0].name : '';
                                     const shortName = fileName.length > 10 ? fileName.substring(0, 10) + '...' : fileName;
@@ -194,23 +194,38 @@
     <tbody>
         <tr>
             <td class="atribut">Vizitatori unici</td>
-            <td><?= $db->getTotalAnalyticsCount() ?></td>
+            <td class="atribut2"><?= $db->getTotalAnalyticsCount() ?></td>
+        </tr>
+        <tr>
+            <td class="atribut">IP-uri unice</td>
+            <td class="atribut2"><?= $db->getNumberOfUniqueIps() ?></td>
         </tr>
         <tr>
             <td class="atribut">Pagini vizualizate</td>
-            <td><?= $db->getTotalPagesViewed() ?></td>
+            <td class="atribut2"><?= $db->getTotalPagesViewed() ?></td>
         </tr>
         <tr>
             <td class="atribut">Timpul mediu pe pagini</td>
-            <td><?= number_format($db->getAverageTimeSpent(), 2) ?> secunde</td>
+            <td class="atribut2"><?= number_format($db->getAverageTimeSpent(), 2) ?> secunde</td>
         </tr>
         <tr>
             <td class="atribut">Timpul mediu de incărcare a paginilor</td>
-            <td><?= number_format($db->getAveragePageLoadTime(), 2) ?> secunde</td>
+            <td class="atribut2"><?= number_format($db->getAveragePageLoadTime(), 2) ?> secunde</td>
         </tr>
         <tr>
-            <td class="atribut">Ultima pagină vizualizată</td>
-            <td><?= htmlspecialchars($db->getLastPageViewed()) ?></td>
+            <td class="atribut">Ultimele pagini vizualizate</td>
+            <td class="atribut2">
+                <div class="last_ips_container">
+                    <ul class="last_ips_ul">
+                        <?php
+                            $lastPages = $db->getLastPageViewed();
+                            foreach ($lastPages as $page) {
+                                echo '<li>' . htmlspecialchars($page) . '</li>';
+                            }
+                        ?>
+                    </ul>
+                </div>
+            </td>
         </tr>
     </tbody>
 </table>

@@ -1,25 +1,25 @@
 <?php
 return [
-    // Create the Users Table
+    // Users
     "CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
-        rights ENUM('user', 'moderator', 'admin') DEFAULT 'user' NOT NULL,
+        rights ENUM('user', 'admin') DEFAULT 'user' NOT NULL,
         tsv_code VARCHAR(10),
         tsv_code_expiration DATETIME
     )",
 
 
-    // Create the Categories Table
+    // Categories
     "CREATE TABLE IF NOT EXISTS categories (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL UNIQUE,
         image VARCHAR(255) NOT NULL
     )",
 
-    // Create the Events Table
+    // Events
     "CREATE TABLE IF NOT EXISTS events (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -31,13 +31,13 @@ return [
         FOREIGN KEY (category_id) REFERENCES categories(id)
     )",
 
-    // Create the Artists Table
+    // Artists
     "CREATE TABLE IF NOT EXISTS artists (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL
     )",
 
-    // Create the Event_Artists Table
+    // Event_Artists
     "CREATE TABLE IF NOT EXISTS event_artists (
         event_id INT NOT NULL,
         artist_id INT NOT NULL,
@@ -46,7 +46,7 @@ return [
         FOREIGN KEY (artist_id) REFERENCES artists(id)
     )",
 
-    // Create the Tickets Table
+    // Tickets
     "CREATE TABLE IF NOT EXISTS tickets (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT,
@@ -57,7 +57,7 @@ return [
         FOREIGN KEY (event_id) REFERENCES events(id)
     )",
 
-    // Create the Sessions Table
+    // Sessions
     "CREATE TABLE IF NOT EXISTS sessions (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT,
@@ -67,7 +67,7 @@ return [
         FOREIGN KEY (user_id) REFERENCES users(id)
     )",
 
-    // Create the Analytics Table
+    // Analytics
     "CREATE TABLE analytics (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NULL,
@@ -92,14 +92,14 @@ return [
     "CREATE INDEX idx_ip_address ON analytics(ip_address)",
     "CREATE INDEX idx_created_at ON analytics(created_at)",
 
-    // Create the Hall Table
+    // Hall
     "CREATE TABLE IF NOT EXISTS hall (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         capacity INT DEFAULT 300
     )",
 
-    // Insert Categories with Images
+    // Adaugam imaginile pentru categoriile de evenimente
     "INSERT INTO categories (name, image) VALUES
         ('Walz', 'vals.webp'),
         ('Band Concert', 'formatie.webp'),
@@ -109,11 +109,11 @@ return [
         ('Conference', 'conferinta.webp'),
         ('Presentations', 'prezentari.webp')",
 
-    // Insert Admin User
+    // Admin User
     "INSERT INTO users (name, email, password, rights) VALUES
         ('admin', 'filip-student@yahoo.com', '" . password_hash('pass', PASSWORD_DEFAULT) . "', 'admin')",
 
-    // Insert Events with Default Category Images
+    // Inseram eventuri cu imaginile default ale categoriilor
     "INSERT INTO events (name, date, start_hour, price, category_id, image) VALUES
         ('Walz Evening', '2024-01-10', '18:00:00', 50.00, 1, 'vals.webp'),
         ('Rock Band Live', '2024-01-12', '20:00:00', 70.00, 2, 'formatie.webp'),
@@ -123,7 +123,7 @@ return [
         ('Tech Conference', '2024-01-30', '10:00:00', 40.00, 6, 'conferinta.webp'),
         ('Product Presentations', '2024-02-05', '14:00:00', 30.00, 7, 'prezentari.webp')",
 
-    // Insert Artists
+    // Introducem artistii
     "INSERT INTO artists (name) VALUES
         ('Johann Strauss II'),
         ('The Rockers'),
@@ -133,7 +133,7 @@ return [
         ('Tech Guru'),
         ('Marketing Specialist')",
 
-    // Link Events to Artists
+    // Legaturi dintre eventuri si artisti
     "INSERT INTO event_artists (event_id, artist_id) VALUES
         (1, 1), -- Walz Evening -> Johann Strauss II
         (2, 2), -- Rock Band Live -> The Rockers
@@ -143,5 +143,6 @@ return [
         (6, 6), -- Tech Conference -> Tech Guru
         (7, 7)  -- Product Presentations -> Marketing Specialist",
 
+    // Sala are capacitate de 300 de locuri
     "INSERT INTO hall (name, capacity) VALUES ('Sala Regala de Muzica', 300)"
 ];

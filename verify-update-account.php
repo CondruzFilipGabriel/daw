@@ -1,6 +1,5 @@
 <?php
     include_once 'modules/header.php';
-    
     include_once 'modules/mail.php';
 
     if (!$user) {
@@ -9,8 +8,6 @@
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-        // Debug::log($_POST);
 
         $name = sanitize_input($_POST['name']);
         if(!validate_name($name)) {
@@ -38,7 +35,7 @@
         $password = trim($_POST['pass1']);
         $confirmPassword = trim($_POST['pass2']);
 
-        // Validate passwords
+        // Validam parolele
         if ($password && $confirmPassword && $password !== $confirmPassword) {
             $_SESSION['alert'] = "Parolele nu se potrivesc.";
             header("Location: user-login.php");

@@ -1,6 +1,5 @@
 <?php
-    include_once 'modules/header.php';
-    
+    include_once 'modules/header.php';    
     include_once 'modules/mail.php';
 
     // Verifică dacă utilizatorul este autentificat

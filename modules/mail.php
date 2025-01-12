@@ -10,24 +10,24 @@
         private $mailPassword;
 
         public function __construct() {
-            // Load credentials from credentials.json
+            // Incarcam credentialele din credentials.json
             $credentialsPath = __DIR__ . '/../credentials.json';
             if (!file_exists($credentialsPath)) {
-                Debug::log('Credentials file not found.');
+                Debug::log('Nu a fost gasit fisierul de credentiale.');
                 return;
             }
 
             $credentials = json_decode(file_get_contents($credentialsPath), true);
 
             if (!isset($credentials['mail_address']) || !isset($credentials['mail_password'])) {
-                Debug::log('Invalid credentials format. Ensure mail_address and mail_password are set.');
+                Debug::log('Formatul credentialelor este invalid.');
                 return;
             }
 
             $this->mailAddress = $credentials['mail_address'];
             $this->mailPassword = $credentials['mail_password'];
 
-            // Initialize PHPMailer
+            // Initializam PHPMailer
             $this->mail = new PHPMailer(true);
             $this->configureMailer();
         }
@@ -46,7 +46,7 @@
                 $this->mail->addReplyTo($this->mailAddress, 'Sala Regala de Muzica');
 
             } catch (Exception $e) {
-                Debug::log('Mailer configuration failed: ' . $e->getMessage());
+                Debug::log('Eroare in configurarea PHPMailer: ' . $e->getMessage());
             }
         }
 
@@ -59,18 +59,18 @@
                 $this->mail->Subject = $subject;
                 $this->mail->Body = $body;
         
-                // Add file attachments
+                // Adaugam atasamentele (fisiere)
                 if (!empty($attachments)) {
                     foreach ($attachments as $attachment) {
                         if (file_exists($attachment)) {
                             $this->mail->addAttachment($attachment);
                         } else {
-                            Debug::log("Attachment not found: $attachment");
+                            Debug::log("Nu a fost gasit atasamentul: $attachment");
                         }
                     }
                 }
         
-                // Add in-memory attachments
+                // Adaugam atasamentele variabile (din memorie)
                 if (!empty($inMemoryAttachments)) {
                     foreach ($inMemoryAttachments as $attachment) {
                         $this->mail->addStringAttachment($attachment['data'], $attachment['name']);
@@ -80,7 +80,7 @@
                 $this->mail->send();
                 return true;
             } catch (Exception $e) {
-                Debug::log('Mail sending failed: ' . $e->getMessage());
+                Debug::log('Eroare in trimiterea mailului: ' . $e->getMessage());
                 return false;
             }
         }                   
