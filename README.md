@@ -17,7 +17,7 @@ Grupa: 2
 ## 📄 Descrierea proiectului
 Acest proiect simulează o platformă web pentru gestionarea unei săli de concerte, oferind următoarele funcționalități:
 - **Achiziționarea biletelor**: Selectarea locurilor dorite, plata online, și trimiterea biletului cu cod QR și factură pe e-mail.
-- **Interfață de administrare**: Gestionarea evenimentelor, utilizatorilor și plăților.
+- **Interfață de administrare**: Gestionarea evenimentelor, utilizatorilor și plăților. User creat la prima accesare a site-ului: admin (email: admin@example.com, parola: pass).
 
 ---
 
