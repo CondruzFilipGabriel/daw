@@ -111,7 +111,7 @@ return [
 
     // Admin User
     "INSERT INTO users (name, email, password, rights) VALUES
-        ('admin', 'filip_student@yahoo.com', '" . password_hash('pass', PASSWORD_DEFAULT) . "', 'admin')",
+        ('admin', 'admin@eaxmple.com', '" . password_hash('pass', PASSWORD_DEFAULT) . "', 'admin')",
 
     // Inseram eventuri cu imaginile default ale categoriilor
     "INSERT INTO events (name, date, start_hour, price, category_id, image) VALUES
