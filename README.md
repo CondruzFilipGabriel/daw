@@ -18,7 +18,7 @@ Grupa: 2
 Acest proiect simulează o platformă web pentru gestionarea unei săli de concerte, oferind următoarele funcționalități:
 - **Achiziționarea biletelor**: Selectarea locurilor dorite, plata online, și trimiterea biletului cu cod QR și factură pe e-mail.
 - **Interfață de administrare**: Gestionarea evenimentelor, utilizatorilor și plăților.
-- **Instructiuni de instalare**: User creat la prima accesare a site-ului: admin (email: admin@example.com, parola: pass). Inainte de prima rulare, editati fisierul credentials.json si credentialele userului admin din db/db_populate.php. Dupa prima rulare si crearea tabelelor din baza de date si popularea acestora cu date fictive, puteti sterge fisierul db_populate.php.
+- **Instructiuni de instalare**: Inainte de prima rulare, editati fisierul credentials.json si credentialele userului admin din db/db_populate.php. Dupa prima rulare si crearea tabelelor din baza de date si popularea acestora cu date fictive, puteti sterge fisierul db_populate.php.
 
 ---
 
